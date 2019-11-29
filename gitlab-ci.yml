@@ -13,8 +13,8 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  # - unitest
-  # - featuretest
+  - unitest
+  - featuretest
   - commit
   - deployproduct_stage
 
@@ -22,31 +22,30 @@ stages:
 #    # - docker login -u viethdoc -p 123@123a123A
 #    - whoami
 
-# unitest:
-#   tags:
-#     - docker
-#   stage: unitest
-#   image: php:7.0
-#   script:
-#     # - echo $TEST
-#     - ls
-#     - apt-get update -yqq >/dev/null 2>&1
-#     - apt-get install git -yqq >/dev/null 2>&1
-#     - curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-6.5.9.phar >/dev/null 2>&1
-#     - chmod +x /usr/local/bin/phpunit
-#     - phpunit --bootstrap autoload.php EmailTest
-#   when: always
+unitest:
+  tags:
+    - docker
+  stage: unitest
+  image: php:7.0
+  script:
+    # - echo $TEST
+    - apt-get update -yqq >/dev/null 2>&1
+    - apt-get install git -yqq >/dev/null 2>&1
+    - curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-6.5.9.phar >/dev/null 2>&1
+    - chmod +x /usr/local/bin/phpunit
+    - phpunit --bootstrap autoload.php EmailTest
+  when: always
 
-# featuretest:
-#   tags:
-#     - sock
-#   stage: featuretest
-#   script:
-#     - docker rename $(docker create -p 9005:80/tcp richarvey/nginx-php-fpm) $CONTAINER_NAME; docker start $CONTAINER_NAME
-#     - docker cp Email.php $CONTAINER_NAME:/var/www/html/index.php
-#     - echo "Website http://172.18.10.158:9005"
-#     - echo "Done1"
-#   when: always
+featuretest:
+  tags:
+    - sock
+  stage: featuretest
+  script:
+    - docker rename $(docker create -p 9005:80/tcp richarvey/nginx-php-fpm) $CONTAINER_NAME; docker start $CONTAINER_NAME
+    - docker cp Email.php $CONTAINER_NAME:/var/www/html/index.php
+    - echo "Website http://172.18.10.158:9005"
+    - echo "Done1"
+  when: always
 
 commit:
   tags:
@@ -62,8 +61,8 @@ commit:
     ####
     - docker stop $CONTAINER_NAME
     - docker rm $CONTAINER_NAME
-  # when: manual
-  when: always
+  when: manual
+  # when: always
 
 deployproduct_stage:
   tags:
@@ -75,8 +74,8 @@ deployproduct_stage:
     - docker pull viethddoc/test:lastest
     # - docker ps -q -f ancestor=richarvey/nginx-php-fpm
     - docker run -d -p 80:80  viethddoc/test:lastest
-  # when: manual
-  when: always
+  when: manual
+  # when: always
 
 
 
