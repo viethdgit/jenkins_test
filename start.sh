@@ -1,0 +1,1 @@
+/usr/local/webclip/sbin/nginx -c /usr/local/webclip/conf/nginx.conf && php-fpm && tail -f /usr/local/webclip/logs/clip.vn-access.log;
