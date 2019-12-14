@@ -1,3 +1,8 @@
+FROM php:7.0.26-fpm-alpine
+
+LABEL maintainer="viethd@vega.com.vn"
+
+WORKDIR /root
 COPY src/nginx-1.11.2/ nginx-1.11.2/
 
 RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
